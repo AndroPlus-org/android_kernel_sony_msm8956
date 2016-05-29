@@ -1,0 +1,48 @@
+### GCC 4.9.x
+### I'm using UBERTC https://bitbucket.org/UBERTC/aarch64-linux-android-4.9-kernel
+
+export ARCH=arm64
+export PATH=~/aarch64-linux-android-4.9-kernel/bin/:$PATH
+### See prefix of file names in the toolchain's bin directory
+export CROSS_COMPILE=aarch64-linux-android-
+
+export KBUILD_DIFFCONFIG=suzu_diffconfig
+make msm-perf_defconfig
+make
+
+echo "checking for compiled kernel..."
+if [ -f arch/arm64/boot/Image-dtb ]
+then
+
+	echo "DONE"
+
+	### F5121
+	../final_files/mkbootimg \
+	--kernel arch/arm64/boot/Image-dtb \
+	--ramdisk ../final_files/ramdiskF5121.cpio.gz \
+	--cmdline "androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 earlyprintk enforcing=0" \
+	--base 0x20000000 \
+	--pagesize 2048 \
+	--ramdisk_offset 0x02000000 \
+	--tags_offset 0x01E00000 \
+	--output boot_F5121.img
+
+	### Version number
+	echo -n "Enter version number: "
+	read version
+
+	if [ -e ../final_files/boot_F5121.img ]
+	then
+
+		### Zip boot.img
+		cd ../final_files/
+		mv boot_F5121.img boot.img
+		zip X_AndroPlusKernel_Permissive_v.zip boot.img
+		rm -f boot.img
+
+		### Copy zip to my desktop
+		dd if=X_AndroPlusKernel_Permissive_v.zip of="/mnt/hgfs/VMShare/デスクトップ/X_AndroPlusKernel_Permissive_v$version.zip"
+
+	fi
+
+fi
