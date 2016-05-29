@@ -172,3 +172,14 @@ scripts/genksyms/lex.lex.c
 scripts/genksyms/parse.tab.c
 scripts/kconfig/zconf.lex.c
 scripts/sortextable
+
+crypto/asymmetric_keys/x509-asn1.c
+crypto/asymmetric_keys/x509-asn1.h
+crypto/asymmetric_keys/x509_rsakey-asn1.c
+crypto/asymmetric_keys/x509_rsakey-asn1.h
+extra_certificates
+lib/oid_registry_data.c
+scripts/asn1_compiler
+signing_key.priv
+signing_key.x509
+x509.genkey
